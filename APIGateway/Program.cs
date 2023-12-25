@@ -19,8 +19,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseOcelot();
+
 
 app.UseHttpsRedirection();
+await app.UseOcelot();
 app.Run();
 

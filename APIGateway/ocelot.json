@@ -6,10 +6,10 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5001
+          "Port": 5002
         }
       ],
-      "UpstreamPathTemplate": "customers",
+      "UpstreamPathTemplate": "/customers",
       "UpstreamHttpMethod": [ "Get" ]
     },
 
@@ -19,14 +19,14 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5002
+          "Port": 5001
         }
       ],
-      "UpstreamPathTemplate": "products",
+      "UpstreamPathTemplate": "/products",
       "UpstreamHttpMethod": [ "Get" ]
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "htpp://localhost:5003"
+    "BaseUrl": "http://localhost:5003"
   }
 }
