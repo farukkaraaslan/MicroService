@@ -6,10 +6,21 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5002
+          "Port": 10101
+        },
+        {
+          "Host": "localhost",
+          "Port": 10102
+        },
+        {
+          "Host": "localhost",
+          "Port": 10103
         }
       ],
       "UpstreamPathTemplate": "/customers",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "UpstreamHttpMethod": [ "Get" ]
     },
 
