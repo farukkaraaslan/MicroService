@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CustomerAPI.Context;
+using CustomerAPI.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CustomerAPI.Controllers
 {
@@ -7,25 +10,28 @@ namespace CustomerAPI.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
+        private readonly MyDbContext _dbContext;
         private IConfiguration _configuration;
 
         public CustomersController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _dbContext = new MyDbContext(); 
+        }
+
+        [HttpPost]
+        public IActionResult Add(Customer customer)
+        {
+            _dbContext.Add(customer);
+           _dbContext.SaveChanges();
+            return Ok(customer);
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var data = _configuration["data"];
-            return Ok(string.Concat(data," - ", 
-                new List<string> { 
-                    "Hilmi CELAYİR",
-                    "Saniye YILDIZ", 
-                    "Faruk KARAASLAN", 
-                    "Ramazan TAŞÖRER", 
-                    "Oğuzhan DİLEK" 
-                }));
+          var customer = _dbContext.Set<Customer>();
+            return Ok(customer);
         }
     }
 }
