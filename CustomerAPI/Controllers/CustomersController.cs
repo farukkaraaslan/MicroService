@@ -30,8 +30,8 @@ namespace CustomerAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-          var customer = _dbContext.Set<Customer>();
-            return Ok(customer);
+            var customers = _dbContext.Set<Customer>().ToList();
+            return Ok(customers);
         }
     }
 }

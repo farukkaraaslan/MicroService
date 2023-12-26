@@ -21,7 +21,7 @@
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       },
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamHttpMethod": [ "Get", "Post" ]
     },
 
     {
