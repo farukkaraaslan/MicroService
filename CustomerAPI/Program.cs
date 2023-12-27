@@ -1,4 +1,7 @@
 
+using CustomerAPI.Helper;
+using CustomerAPI.Interfaces;
+
 namespace CustomerAPI;
 
 public class Program
@@ -10,6 +13,7 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddTransient<IServiceCallHelper, ServiceCallHelper>();
 
         var app = builder.Build();
 

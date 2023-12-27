@@ -3,7 +3,7 @@ using System.Net;
 
 namespace CustomerAPI.Helper;
 
-public class ServiceHelper : IServiceCallHelper
+public class ServiceCallHelper : IServiceCallHelper
 {
     public async  Task<object> Get(string uri)
     {

@@ -15,9 +15,10 @@ public class MyDbContext : DbContext
     public MyDbContext(DbContextOptions options) : base(options) { }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql("Server=10.10.10.2;Port=5432;Database=etrade; User Id=root; Password=1234;");
+        optionsBuilder.UseNpgsql("Server=localhost;Port=5432;Database=customers; User Id=root; Password=1234;");
     }
 
 
     public DbSet<Customer> Customers { get; set; }
+    public DbSet<Product> Products { get; set; }
 }
