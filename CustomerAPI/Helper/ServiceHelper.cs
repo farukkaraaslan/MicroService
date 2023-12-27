@@ -1,12 +1,17 @@
 ﻿using CustomerAPI.Interfaces;
+using System.Net;
 
 namespace CustomerAPI.Helper;
 
 public class ServiceHelper : IServiceCallHelper
 {
-    public Task<object> Get(string uri)
+    public async  Task<object> Get(string uri)
     {
-      
+      using(WebClient webClient = new WebClient())
+        {
+            var response = webClient.DownloadString(uri);
+            return response;
+        }
     }
 
     public async Task<string> Post(Uri uri, HttpMethod method, StringContent stringContent)
