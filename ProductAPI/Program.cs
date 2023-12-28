@@ -11,10 +11,27 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddDbContext<MyDbContext>(options =>
+        builder.Services.AddDbContext<MyDbContext>();
+
+        builder.Services.AddCap(options =>
         {
-            options.UseNpgsql("Server=localhost;Port=5432;Database=etrade; User Id=root; Password=1234;");
+            options.UseEntityFramework<MyDbContext>();
+            options.UsePostgreSql("Server=localhost;Port=5432;Database=products; User Id=root; Password=1234;");
+            options.UseRabbitMQ(Roptions =>
+            {
+
+                Roptions.ConnectionFactoryOptions = Foptions =>
+                {
+                    Foptions.Ssl.Enabled = false;
+                    Foptions.HostName = "localhost";
+                    Foptions.UserName = "guest";
+                    Foptions.Password = "guest";
+                    Foptions.Port = 5672;
+                };
+            });
         });
+
+
         builder.Services.AddTransient<IServiceCallHelper,ServiceCallHelper>();
         builder.Services.AddControllers();
 

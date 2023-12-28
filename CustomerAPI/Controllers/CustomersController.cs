@@ -1,6 +1,7 @@
 ﻿using CustomerAPI.Context;
 using CustomerAPI.Interfaces;
 using CustomerAPI.Models;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
@@ -13,13 +14,17 @@ namespace CustomerAPI.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly MyDbContext _dbContext;
-        private IConfiguration _configuration;
         private readonly IServiceCallHelper _serviceCallHelper;
-        public CustomersController(IServiceCallHelper serviceCallHelper,IConfiguration configuration)
+        private readonly ICapPublisher _capPublisher;
+
+        public CustomersController(
+            MyDbContext dbContext, 
+            IServiceCallHelper serviceCallHelper, 
+            ICapPublisher capPublisher)
         {
-            _configuration = configuration;
-            _dbContext = new MyDbContext(); 
+            _dbContext = dbContext;
             _serviceCallHelper = serviceCallHelper;
+            _capPublisher = capPublisher;
         }
 
         [HttpGet]
@@ -30,18 +35,32 @@ namespace CustomerAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Customer customer)
+        public async Task<IActionResult> Add(Customer customer)
         {
            
             _dbContext.Add(customer);
            _dbContext.SaveChanges();
 
-            var uri = new Uri("http://localhost:5001/api/products/addcustomer");
-            var jsonContent = JsonConvert.SerializeObject(customer);
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            _serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
+            //var uri = new Uri("http://localhost:5001/api/products/addcustomer");
+
+            //var jsonContent = JsonConvert.SerializeObject(customer);
+
+            //var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+            //_serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
+
+            using var transaction= _dbContext.Database.BeginTransaction(_capPublisher,autoCommit:true);
+
+            await _capPublisher.PublishAsync<Customer>("customer-add", customer);
 
             return Ok(customer);
+        }
+
+        [CapSubscribe("product-add")]
+
+        public void GetCustomer(Product product)
+        {
+            Console.WriteLine(product.Name);
         }
 
         [HttpPost("products")]
