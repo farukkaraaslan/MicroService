@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="DotNetCore.CAP" Version="8.0.0" />
+    <PackageReference Include="DotNetCore.CAP.Dashboard" Version="8.0.0" />
     <PackageReference Include="DotNetCore.CAP.PostgreSql" Version="8.0.0" />
     <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />

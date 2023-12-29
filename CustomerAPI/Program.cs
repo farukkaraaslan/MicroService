@@ -9,7 +9,10 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
         builder.Services.AddDbContext<MyDbContext>();
+        builder.Services.AddTransient<IServiceCallHelper, ServiceCallHelper>();
+        builder.Services.AddTransient<ICapHelper, CapHelper>();
 
         builder.Services.AddControllers();
 
@@ -17,8 +20,7 @@ public class Program
 
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddTransient<IServiceCallHelper, ServiceCallHelper>();
-        builder.Services.AddTransient<ICapHelper,CapHelper>();
+        
 
         builder.Services.AddCap(options =>
         {
