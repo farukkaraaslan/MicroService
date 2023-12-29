@@ -6,22 +6,34 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 10101
-        },
-        {
-          "Host": "localhost",
-          "Port": 10102
-        },
-        {
-          "Host": "localhost",
-          "Port": 10103
+          "Port": 5002
         }
       ],
       "UpstreamPathTemplate": "/customers",
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       },
-      "UpstreamHttpMethod": [ "Get", "Post" ]
+      "UpstreamHttpMethod": [ "Post" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/customers",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "UpstreamPathTemplate": "/customers",
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "UpstreamHttpMethod": [ "Get" ],
+      "UseCache": true,
+      "FileCacheOptions": {
+        "Region": "customer_get",
+        "TtlSeconds": 600
+      }
     },
 
     {

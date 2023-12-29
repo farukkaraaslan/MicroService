@@ -1,8 +1,6 @@
-
 using CustomerAPI.Context;
 using CustomerAPI.Helper;
 using CustomerAPI.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace CustomerAPI;
 
@@ -20,12 +18,13 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddTransient<IServiceCallHelper, ServiceCallHelper>();
-        builder.Services.AddScoped<ICapHelper,CapHelper>();
+        builder.Services.AddTransient<ICapHelper,CapHelper>();
 
         builder.Services.AddCap(options =>
         {
             options.UseEntityFramework<MyDbContext>();
             options.UsePostgreSql("Server=localhost;Port=5432;Database=customers; User Id=root; Password=1234;");
+            options.UseDashboard(o=> o.PathMatch="/cap-dashboard");
             options.UseRabbitMQ(Roptions =>
             {
 
