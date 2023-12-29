@@ -20,6 +20,7 @@ public class Program
         builder.Services.AddSwaggerGen();
 
         builder.Services.AddTransient<IServiceCallHelper, ServiceCallHelper>();
+        builder.Services.AddScoped<ICapHelper,CapHelper>();
 
         builder.Services.AddCap(options =>
         {

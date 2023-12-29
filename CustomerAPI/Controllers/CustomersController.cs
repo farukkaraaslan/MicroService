@@ -1,4 +1,5 @@
 ﻿using CustomerAPI.Context;
+using CustomerAPI.Helper;
 using CustomerAPI.Interfaces;
 using CustomerAPI.Models;
 using DotNetCore.CAP;
@@ -11,20 +12,11 @@ namespace CustomerAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomersController : ControllerBase
+    public class CustomersController : BaseController
     {
-        private readonly MyDbContext _dbContext;
-        private readonly IServiceCallHelper _serviceCallHelper;
-        private readonly ICapPublisher _capPublisher;
-
-        public CustomersController(
-            MyDbContext dbContext, 
-            IServiceCallHelper serviceCallHelper, 
-            ICapPublisher capPublisher)
+        public CustomersController(MyDbContext dbContext, ICapHelper capHelper) : base(dbContext, capHelper)
         {
-            _dbContext = dbContext;
-            _serviceCallHelper = serviceCallHelper;
-            _capPublisher = capPublisher;
+
         }
 
         [HttpGet]
@@ -49,9 +41,11 @@ namespace CustomerAPI.Controllers
 
             //_serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
 
-            using var transaction= _dbContext.Database.BeginTransaction(_capPublisher,autoCommit:true);
+            //using var transaction= _dbContext.Database.BeginTransaction(_capPublisher,autoCommit:true);
 
-            await _capPublisher.PublishAsync<Customer>("customer-add", customer);
+            //await _capPublisher.PublishAsync<Customer>("customer-add", customer);
+
+            await _capHelper.ExecuteWithTransactionAsync("add-customer-helper", customer);
 
             return Ok(customer);
         }
@@ -63,18 +57,18 @@ namespace CustomerAPI.Controllers
             Console.WriteLine(product.Name);
         }
 
-        [HttpPost("products")]
-        public async Task<IActionResult> AddProduct(Product product)
-        {
-            var uri = new Uri("http://localhost:5001/api/products");
-            var jsonContent = JsonConvert.SerializeObject(product);
+        //[HttpPost("products")]
+        //public async Task<IActionResult> AddProduct(Product product)
+        //{
+        //    var uri = new Uri("http://localhost:5001/api/products");
+        //    var jsonContent = JsonConvert.SerializeObject(product);
 
-            var mediaType = new MediaTypeHeaderValue("application/json");
-            var httpContent = new StringContent(jsonContent, Encoding.UTF8, mediaType.ToString());
-            var response = await _serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
-            return Ok(response);
+        //    var mediaType = new MediaTypeHeaderValue("application/json");
+        //    var httpContent = new StringContent(jsonContent, Encoding.UTF8, mediaType.ToString());
+        //    var response = await _serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
+        //    return Ok(response);
           
     
-        }
+        //}
     }
 }
