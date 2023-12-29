@@ -12,6 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddDbContext<MyDbContext>();
+        builder.Services.AddTransient<ICapHelper,CapHelper>();  
 
         builder.Services.AddCap(options =>
         {

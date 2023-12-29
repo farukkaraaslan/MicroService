@@ -33,42 +33,27 @@ namespace CustomerAPI.Controllers
             _dbContext.Add(customer);
            _dbContext.SaveChanges();
 
-            //var uri = new Uri("http://localhost:5001/api/products/addcustomer");
-
-            //var jsonContent = JsonConvert.SerializeObject(customer);
-
-            //var httpContent = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-            //_serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
-
-            //using var transaction= _dbContext.Database.BeginTransaction(_capPublisher,autoCommit:true);
-
-            //await _capPublisher.PublishAsync<Customer>("customer-add", customer);
-
             await _capHelper.ExecuteWithTransactionAsync("add-customer-helper", customer);
 
             return Ok(customer);
         }
 
-        [CapSubscribe("product-add")]
-
-        public void GetCustomer(Product product)
+        [CapSubscribe("add-product-helper")]
+        public async Task AddProduct(Product product)
         {
-            Console.WriteLine(product.Name);
+            try
+            {
+                await _dbContext.AddAsync(product);
+                await _dbContext.SaveChangesAsync();
+
+                Console.WriteLine("Yeni ürün eklendi");
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+            }
         }
 
-        //[HttpPost("products")]
-        //public async Task<IActionResult> AddProduct(Product product)
-        //{
-        //    var uri = new Uri("http://localhost:5001/api/products");
-        //    var jsonContent = JsonConvert.SerializeObject(product);
-
-        //    var mediaType = new MediaTypeHeaderValue("application/json");
-        //    var httpContent = new StringContent(jsonContent, Encoding.UTF8, mediaType.ToString());
-        //    var response = await _serviceCallHelper.Post(uri, HttpMethod.Post, httpContent);
-        //    return Ok(response);
-          
-    
-        //}
     }
 }
